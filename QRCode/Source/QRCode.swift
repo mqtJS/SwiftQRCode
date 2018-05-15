@@ -197,17 +197,20 @@ open class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection){
-        self.session.stopRunning()
+        
         var stringValue:String?
         if metadataObjects.count > 0 {
-            let metadataObject = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-            stringValue = metadataObject.stringValue
-            
-            //返回扫描结果
-            if let value = stringValue{
-                self.completedCallBack?(value)
+            let metadataObject = metadataObjects[0]
+            if metadataObject.type == .qr{
+                self.session.stopRunning()
+                let object = metadataObject as! AVMetadataMachineReadableCodeObject
+                 stringValue = object.stringValue
+                //返回扫描结果
+                if let value = stringValue{
+                    self.completedCallBack?(value)
+                }
+                
             }
-            
         }
     }
     
